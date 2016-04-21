@@ -43,14 +43,16 @@ namespace Entith.AspNet.Domain
 
 		public SaveChangesResults PostSaveChanges()
 		{
-            SaveChangesResults results = new SaveChangesResults();
-            
-			foreach (IDomainService service in _services)
+            List<SaveChangesResult> result = new List<SaveChangesResult>();
+
+            foreach (IDomainService service in _services)
 			{
-				results.Add(service.PostSaveChanges().ToArray());
-			}
+                var callbackResult = service.PostSaveChanges();
+                if (callbackResult != null)
+                    result.AddRange(callbackResult);
+            }
             
-            return results;
+            return new SaveChangesResults(result.ToArray()); ;
 		}
 
 		public void RegisterService(IDomainService service)

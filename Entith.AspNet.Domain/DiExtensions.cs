@@ -18,6 +18,7 @@ namespace Entith.AspNet.DependencyInjection
 			where TService : class, IDomainService<TEntity, TKey>
 		{
 			builder.RegisterTypeAs<TService, IDomainService<TEntity, TKey>>();
+            builder.RegisterTypeAsSelf<TService>();
 		}
 
 		public static void RegisterRepository<TEntity, TKey, TRepository>(this ISimpleRegistrationBuilder builder)
@@ -27,6 +28,7 @@ namespace Entith.AspNet.DependencyInjection
 		{
 			builder.RegisterTypeAs<TRepository, IRepository<TEntity, TKey>>();
             builder.RegisterTypeAs<TRepository, IRepository>();
+            builder.RegisterTypeAsSelf<TRepository>();
 		}
 
 		public static void RegisterServiceRepository<TEntity, TKey, TRepository>(this ISimpleRegistrationBuilder builder)

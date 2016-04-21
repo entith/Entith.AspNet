@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Entith.AspNet.ModuledController
+namespace System.Web.Mvc
 {
     public static class TimezoneHtmlHelperExtensions
     {

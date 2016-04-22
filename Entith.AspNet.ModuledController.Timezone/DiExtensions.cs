@@ -5,10 +5,10 @@ namespace Entith.AspNet.DependencyInjection
 {
     public static class DiExtensions
     {
-		public static void RegisterTimezoneControllerModule(this ISimpleRegistrationBuilder builder)
-		{
-			builder.RegisterControllerModule<TimezoneControllerModule>();
-		}
+        public static void RegisterTimezoneControllerModule(this ISimpleRegistrationBuilder builder)
+        {
+            builder.RegisterControllerModule<TimezoneControllerModule>();
+        }
     }
 }
 

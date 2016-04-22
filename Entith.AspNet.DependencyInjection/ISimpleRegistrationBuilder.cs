@@ -4,8 +4,8 @@ namespace Entith.AspNet.DependencyInjection
 {
     public interface ISimpleRegistrationBuilder
     {
-		void RegisterTypeAs<TType, TAs>();
-		void RegisterTypeAsSelf<TType>();
+        void RegisterTypeAs<TType, TAs>();
+        void RegisterTypeAsSelf<TType>();
     }
 }
 

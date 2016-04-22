@@ -6,11 +6,11 @@ namespace Entith.AspNet.DependencyInjection
 {
     public static class DiExtensions
     {
-		public static void RegisterDomainTimestampControllerModule(this ISimpleRegistrationBuilder builder)
-		{
+        public static void RegisterDomainTimestampControllerModule(this ISimpleRegistrationBuilder builder)
+        {
             builder.RegisterTypeAsSelf<TimestampableService>();
-			builder.RegisterControllerModule<DomainTimestampControllerModule>();
-		}
+            builder.RegisterControllerModule<DomainTimestampControllerModule>();
+        }
     }
 }
 

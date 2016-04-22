@@ -8,7 +8,7 @@ namespace Entith.AspNet.ModuledController
 {
     public class TimezoneControllerModule : ControllerModule
     {
-		public override void OnActionExecuting(ActionExecutingContext filterContext, ControllerContext context)
+        public override void OnActionExecuting(ActionExecutingContext filterContext, ControllerContext context)
         {
 
             // http://afana.me/post/aspnet-mvc-internationalization-date-time.aspx

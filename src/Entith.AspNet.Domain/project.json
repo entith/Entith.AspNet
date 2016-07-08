@@ -1,0 +1,19 @@
+﻿{
+  "version": "0.0.1-*",
+
+  "dependencies": {
+    "Entith.AspNet.DependencyInjection": "0.0.1-*",
+    "System.Linq.Expressions": "4.1.0",
+    "System.Linq.Queryable": "4.0.1"
+  },
+
+  "frameworks": {
+    "netstandard1.5": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net451": {}
+  }
+}

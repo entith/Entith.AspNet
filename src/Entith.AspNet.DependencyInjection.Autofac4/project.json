@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1-*",
+
+  "dependencies": {
+    "Autofac.Extensions.DependencyInjection": "4.0.0-rc2-240",
+    "Entith.AspNet.DependencyInjection": "0.0.1-*",
+  },
+
+  "frameworks": {
+    "netstandard1.5": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    }
+  }
+}

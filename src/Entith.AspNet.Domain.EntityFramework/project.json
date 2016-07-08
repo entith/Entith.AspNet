@@ -1,0 +1,14 @@
+﻿{
+  "version": "0.0.1-*",
+
+  "dependencies": {
+    "Entith.AspNet.DependencyInjection": "0.0.1-*",
+    "Entith.AspNet.Domain": "0.0.1-*",
+    "EntityFramework": "6.1.3"
+  },
+
+  "frameworks": {
+
+    "net451": {}
+  }
+}

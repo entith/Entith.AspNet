@@ -1,0 +1,12 @@
+﻿{
+  "version": "0.0.1-*",
+
+  "dependencies": {
+    "Autofac": "3.5.2",
+    "Entith.AspNet.DependencyInjection": "0.0.1-*",
+  },
+
+  "frameworks": {
+    "net451": {}
+  }
+}

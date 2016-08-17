@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1-*",
+  "version": "0.0.2-*",
 
   "dependencies": {
     "Autofac.Extensions.DependencyInjection": "4.0.0-rc2-240",
@@ -12,6 +12,7 @@
       "dependencies": {
         "NETStandard.Library": "1.6.0"
       }
-    }
+    },
+    "net451": {}
   }
 }

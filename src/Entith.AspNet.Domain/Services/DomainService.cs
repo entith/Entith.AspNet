@@ -55,7 +55,7 @@ namespace Entith.AspNet.Domain
 
         #region fetch
 
-        public ICollection<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public virtual ICollection<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
             return _repository.Find(predicate).ToList();
         }
@@ -65,7 +65,7 @@ namespace Entith.AspNet.Domain
         //    return _repository.Find(predicate, properties).ToList();
         //}
 
-        public TEntity Get(TKey id)
+        public virtual TEntity Get(TKey id)
         {
             return _repository.Get(id);
         }
@@ -75,7 +75,7 @@ namespace Entith.AspNet.Domain
         //    return _repository.Get(id, properties);
         //}
 
-        public ICollection<TEntity> GetAll()
+        public virtual ICollection<TEntity> GetAll()
         {
             return _repository.GetAll().ToList();
         }
@@ -89,7 +89,7 @@ namespace Entith.AspNet.Domain
 
         #region paged fetch
 
-        public IPaged<TEntity> GetAllPaged()
+        public virtual IPaged<TEntity> GetAllPaged()
         {
             return _repository.GetAll().ToPaged();
         }
@@ -99,7 +99,7 @@ namespace Entith.AspNet.Domain
         //    return _repository.GetAll(properties).ToPaged();
         //}
 
-        public IPaged<TEntity> FindPaged(Expression<Func<TEntity, bool>> predicate)
+        public virtual IPaged<TEntity> FindPaged(Expression<Func<TEntity, bool>> predicate)
         {
             return _repository.Find(predicate).ToPaged();
         }
@@ -113,22 +113,22 @@ namespace Entith.AspNet.Domain
 
         #region add/remove
 
-        public void Add(TEntity entity)
+        public virtual void Add(TEntity entity)
         {
             _repository.Add(entity);
         }
 
-        public void AddRange(IEnumerable<TEntity> entities)
+        public virtual void AddRange(IEnumerable<TEntity> entities)
         {
             _repository.AddRange(entities);
         }
 
-        public void Remove(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
             _repository.Remove(entity);
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public virtual void RemoveRange(IEnumerable<TEntity> entities)
         {
             _repository.RemoveRange(entities);
         }
@@ -137,7 +137,7 @@ namespace Entith.AspNet.Domain
 
         #region UOW + domain logic
 
-        public SaveChangesResults SaveChanges()
+        public virtual SaveChangesResults SaveChanges()
         {
             return _uow.SaveChanges();
         }

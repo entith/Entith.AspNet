@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1-*",
+  "version": "0.0.2-*",
 
   "dependencies": {
     "Entith.AspNet.DependencyInjection": "0.0.1-*",
@@ -16,6 +16,7 @@
       "dependencies": {
         "NETStandard.Library": "1.6.0"
       }
-    }
+    },
+    "net451": {}
   }
 }

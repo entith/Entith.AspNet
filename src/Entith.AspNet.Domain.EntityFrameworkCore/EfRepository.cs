@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entith.AspNet.Domain.EntityFramework
 {
-    public class EfRepository<TEntity, TKey, TDbContext> : IRepository<TEntity, TKey> 
+    public class EfRepository<TEntity, TKey, TDbContext> : IEfRepository<TEntity, TKey> 
         where TEntity : class, IEntity<TKey>
         where TKey : IEquatable<TKey>
         where TDbContext : DbContext

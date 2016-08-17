@@ -7,7 +7,7 @@ using Entith.AspNet.Domain;
 
 namespace Entith.AspNet.Domain.EntityFramework
 {
-    public class EfRepository<TEntity, TKey, TDbContext> : IRepository<TEntity, TKey> 
+    public class EfRepository<TEntity, TKey, TDbContext> : IEfRepository<TEntity, TKey> 
         where TEntity : class, IEntity<TKey>
         where TKey : IEquatable<TKey>
         where TDbContext : DbContext
@@ -24,30 +24,30 @@ namespace Entith.AspNet.Domain.EntityFramework
             return Context.Set<TEntity>().Where(e => e.Id.Equals(id)).FirstOrDefault();
         }
 
-        //public TEntity Get(TKey id, params Expression<Func<TEntity, object>>[] properties)
-        //{
-        //    return Context.Set<TEntity>().IncludeProperties(properties).Where(e => e.Id.Equals(id)).FirstOrDefault();
-        //}
+        public TEntity Get(TKey id, params Expression<Func<TEntity, object>>[] properties)
+        {
+            return Context.Set<TEntity>().IncludeProperties(properties).Where(e => e.Id.Equals(id)).FirstOrDefault();
+        }
 
         public IQueryable<TEntity> GetAll()
         {
             return Context.Set<TEntity>();
         }
 
-        //public IQueryable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] properties)
-        //{
-        //    return Context.Set<TEntity>().IncludeProperties(properties);
-        //}
+        public IQueryable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] properties)
+        {
+            return Context.Set<TEntity>().IncludeProperties(properties);
+        }
 
         public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
             return Context.Set<TEntity>().Where(predicate);
         }
 
-        //public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] properties)
-        //{
-        //    return Context.Set<TEntity>().Where(predicate).IncludeProperties(properties);
-        //}
+        public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] properties)
+        {
+            return Context.Set<TEntity>().Where(predicate).IncludeProperties(properties);
+        }
 
         public void Add(TEntity entity)
         {

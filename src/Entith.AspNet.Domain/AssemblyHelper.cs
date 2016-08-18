@@ -10,8 +10,12 @@ namespace Entith.AspNet.Domain
     // http://www.michael-whelan.net/replacing-appdomain-in-dotnet-core/
     public static class AssemblyHelper
     {
-        public static IEnumerable<Assembly> GetAssemblies()
+        public static IEnumerable<Type> GetAssemblies()
         {
+
+#if NET451
+            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes());
+#else
             var assemblies = new List<Assembly>();
             var dependencies = DependencyContext.Default.RuntimeLibraries;
             foreach (var library in dependencies)
@@ -26,7 +30,8 @@ namespace Entith.AspNet.Domain
 
                 }
             }
-            return assemblies;
+            return assemblies.SelectMany(a => a.ExportedTypes);
+#endif
         }
     }
 }

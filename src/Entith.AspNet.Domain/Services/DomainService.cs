@@ -68,7 +68,7 @@ namespace Entith.AspNet.Domain
             // Add all applicable logic units found in application.
             if(_logicUnitTypes == null)
                 _logicUnitTypes = AssemblyHelper.GetAssemblies()
-                    .SelectMany(a => a.ExportedTypes).Where(t => typeof(ILogicUnit<TEntity, TKey>).IsAssignableFrom(t));
+                    .Where(t => typeof(ILogicUnit<TEntity, TKey>).IsAssignableFrom(t));
             
             foreach(Type t in _logicUnitTypes)
             {

@@ -10,12 +10,12 @@ namespace Entith.AspNet.Domain
         where TKey : IEquatable<TKey>
         where TRepository : IRepository<TEntity, TKey>
     {
-        protected TRepository _customRepository;
+        protected TRepository CustomRepository { get; private set; }
 
         public DomainService(IUnitOfWork uow)
             : base(uow)
         {
-            _customRepository = uow.GetRepository<TEntity, TRepository>();
+            CustomRepository = uow.GetRepository<TEntity, TRepository>();
         }
     }
 
@@ -33,7 +33,7 @@ namespace Entith.AspNet.Domain
         /// <summary>
         /// The repository instance this service wraps around.
         /// </summary>
-        protected IRepository<TEntity, TKey> _repository;
+        protected IRepository<TEntity, TKey> Repository { get; private set; }
 
         /// <summary>
         /// The unit of work this service is bound to.
@@ -46,7 +46,7 @@ namespace Entith.AspNet.Domain
         /// <param name="uow">The unit of work instance to bind to.</param>
         public DomainService(IUnitOfWork uow)
         {
-            _repository = uow.GetRepository<TEntity, IRepository<TEntity, TKey>>();
+            Repository = uow.GetRepository<TEntity, IRepository<TEntity, TKey>>();
             uow.RegisterService(this);
             _uow = uow;
         }
@@ -57,7 +57,7 @@ namespace Entith.AspNet.Domain
 
         public virtual ICollection<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return _repository.Find(predicate).ToList();
+            return Repository.Find(predicate).ToList();
         }
 
         //public ICollection<TEntity> Find(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] properties)
@@ -67,7 +67,7 @@ namespace Entith.AspNet.Domain
 
         public virtual TEntity Get(TKey id)
         {
-            return _repository.Get(id);
+            return Repository.Get(id);
         }
 
         //public TEntity Get(TKey id, params Expression<Func<TEntity, object>>[] properties)
@@ -77,7 +77,7 @@ namespace Entith.AspNet.Domain
 
         public virtual ICollection<TEntity> GetAll()
         {
-            return _repository.GetAll().ToList();
+            return Repository.GetAll().ToList();
         }
 
         //public ICollection<TEntity> GetAll(params Expression<Func<TEntity, object>>[] properties)
@@ -91,7 +91,7 @@ namespace Entith.AspNet.Domain
 
         public virtual IPaged<TEntity> GetAllPaged()
         {
-            return _repository.GetAll().ToPaged();
+            return Repository.GetAll().ToPaged();
         }
 
         //public IPaged<TEntity> GetAllPaged(params Expression<Func<TEntity, object>>[] properties)
@@ -101,7 +101,7 @@ namespace Entith.AspNet.Domain
 
         public virtual IPaged<TEntity> FindPaged(Expression<Func<TEntity, bool>> predicate)
         {
-            return _repository.Find(predicate).ToPaged();
+            return Repository.Find(predicate).ToPaged();
         }
 
         //public IPaged<TEntity> FindPaged(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] properties)
@@ -115,22 +115,22 @@ namespace Entith.AspNet.Domain
 
         public virtual void Add(TEntity entity)
         {
-            _repository.Add(entity);
+            Repository.Add(entity);
         }
 
         public virtual void AddRange(IEnumerable<TEntity> entities)
         {
-            _repository.AddRange(entities);
+            Repository.AddRange(entities);
         }
 
         public virtual void Remove(TEntity entity)
         {
-            _repository.Remove(entity);
+            Repository.Remove(entity);
         }
 
         public virtual void RemoveRange(IEnumerable<TEntity> entities)
         {
-            _repository.RemoveRange(entities);
+            Repository.RemoveRange(entities);
         }
 
         #endregion

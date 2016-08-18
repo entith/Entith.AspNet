@@ -4,9 +4,17 @@ Service and repository libraries for ORM-agnostic data access and domain logic/b
 
 TODO
 
+# Entities
+
+TODO
+
+## Custom Primary Key
+
+TODO
+
 # Services
 
-If you don't need any special methods or business logic, you can use the stock `DomainService<TEntity, TKey>` class. In your DI framework, register `DomainService<TEntity, TKey` as an `IDomainService<TEntity, TKey>`, obviously setting `TEntity` and `TKey` to your entity type and its key type. In the constructors of dependent classes, use `IDomainService<TEntity, TKey>`.
+If you don't need any special methods or business logic, you can use the stock `DomainService<TEntity, TKey>` class. In your DI framework, register `DomainService<TEntity, TKey` as an `IDomainService<TEntity, TKey>`, obviously setting `TEntity` and `TKey` to your entity type and its key type. In the constructors of dependent classes, use `IDomainService<TEntity, TKey>`. You will also want to register the ORM-specific implementation of the `IRepository` class as `IRepository<TEntity, TKey>`.
 
 ## Custom methods & domain logic
 
@@ -30,7 +38,7 @@ public class PersonService : DomainService<Person, int>, IPersonService
 }
 ```
 
-You can then create new methods, override existing ones, and inject your business logic where appropriate. In your DI framework, register `PersonService` as an `IPersonService`.
+You can then create new methods, override existing ones, and inject your business logic where appropriate. In your DI framework, register `PersonService` as an `IPersonService`. Don't forget to also register an appropriate `IRepository<Person, int>` implementation for your ORM.
 
 ## Eager loading
 
@@ -61,7 +69,7 @@ public abstract class PersonService<TRepository>
     public Person CustomBasicGet(int id)
     {
         // Do stuff
-        return _repository.Get(id);
+        return Repository.Get(id);
     }
 
     // Add any business logic code as well.
@@ -84,14 +92,14 @@ public class PersonService : PersonService<IEfRepository<Person, int>>
     {
         // Do eager loading stuff
         // Note: _repository will give you a reference to the generic
-        // IRepository. _customRepository will give you access to the ORM
+        // IRepository. CustomRepository will give you access to the ORM
         // specific repository
 
         // Ef6
-        return _customRepository.Get(id, p => p.Address);
+        return CustomRepository.Get(id, p => p.Address);
 
         // EfCore
-        return _customRepository.Get(id).Include(p => p.Address);
+        return CustomRepository.Get(id).Include(p => p.Address);
     }
 }
 

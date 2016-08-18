@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
+using Microsoft.Extensions.DependencyModel;
+using System.Reflection;
+using Castle.DynamicProxy;
 
 namespace Entith.AspNet.Domain
 {
@@ -38,7 +41,11 @@ namespace Entith.AspNet.Domain
         /// <summary>
         /// The unit of work this service is bound to.
         /// </summary>
-        protected IUnitOfWork _uow;
+        protected IUnitOfWork Uow { get; private set; }
+
+        protected ICollection<ILogicUnit<TEntity, TKey>> LogicUnits { get; private set; }
+
+        private static IEnumerable<Type> _logicUnitTypes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Entith.AspNet.Domain.DomainService`2"/> class.
@@ -46,9 +53,35 @@ namespace Entith.AspNet.Domain
         /// <param name="uow">The unit of work instance to bind to.</param>
         public DomainService(IUnitOfWork uow)
         {
-            Repository = uow.GetRepository<TEntity, IRepository<TEntity, TKey>>();
             uow.RegisterService(this);
-            _uow = uow;
+            Uow = uow;
+
+            LogicUnits = new HashSet<ILogicUnit<TEntity, TKey>>();
+
+            // Wrap the repository in a proxy to intercept add and remove calls for business logic.
+            var repo = uow.GetRepository<TEntity, IRepository<TEntity, TKey>>();
+            var interceptor = new RepositoryInterceptor<TEntity, TKey>(this);
+            var dp = new ProxyGenerator();
+            Repository = dp.CreateInterfaceProxyWithTarget(repo, interceptor);
+
+
+            // Add all applicable logic units found in application.
+            if(_logicUnitTypes == null)
+                _logicUnitTypes = AssemblyHelper.GetAssemblies()
+                    .SelectMany(a => a.ExportedTypes).Where(t => typeof(ILogicUnit<TEntity, TKey>).IsAssignableFrom(t));
+            
+            foreach(Type t in _logicUnitTypes)
+            {
+                try
+                {
+                    ILogicUnit<TEntity, TKey> logicUnit = (ILogicUnit<TEntity, TKey>) Activator.CreateInstance(t, uow, this, Repository);
+                    LogicUnits.Add(logicUnit);
+                }
+                catch
+                {
+                    Console.WriteLine("Could not instantiate logic unit of type " + t.FullName);
+                }
+            }
         }
 
         #endregion
@@ -137,19 +170,45 @@ namespace Entith.AspNet.Domain
 
         #region UOW + domain logic
 
-        public virtual SaveChangesResults SaveChanges()
+        public void SaveChanges()
         {
-            return _uow.SaveChanges();
+            Uow.SaveChanges();
         }
 
-        public virtual ICollection<SaveChangesResult> OnSaveChanges()
+        public void OnSaveChanges()
         {
-            return null;
+            foreach (ILogicUnit unit in LogicUnits)
+                unit.OnSaveChanges();
         }
 
-        public virtual ICollection<SaveChangesResult> PostSaveChanges()
+        public void PostSaveChanges()
         {
-            return null;
+            foreach (ILogicUnit unit in LogicUnits)
+                unit.PostSaveChanges();
+        }
+
+        public void OnAdd(TEntity entity)
+        {
+            foreach (ILogicUnit<TEntity, TKey> unit in LogicUnits)
+                unit.OnAdd(entity);
+        }
+
+        public void OnRemove(TEntity entity)
+        {
+            foreach (ILogicUnit<TEntity, TKey> unit in LogicUnits)
+                unit.OnRemove(entity);
+        }
+
+        public void PostAdd(TEntity entity)
+        {
+            foreach (ILogicUnit<TEntity, TKey> unit in LogicUnits)
+                unit.PostAdd(entity);
+        }
+
+        public void PostRemove(TEntity entity)
+        {
+            foreach (ILogicUnit<TEntity, TKey> unit in LogicUnits)
+                unit.PostRemove(entity);
         }
 
         #endregion

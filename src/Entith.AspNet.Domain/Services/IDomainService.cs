@@ -142,21 +142,19 @@ namespace Entith.AspNet.Domain
         /// to the same IUnitOfWork instance.
         /// </summary>
         /// <returns>Results of the attempt to save the changes.</returns>
-        SaveChangesResults SaveChanges();
+        void SaveChanges();
 
         /// <summary>
         /// A callback the IUnitOfWork instance calls before saving changes to the database.
         /// Used for domain/business logic.
         /// </summary>
-        /// <returns>Collection of errors that occured.</returns>
-        ICollection<SaveChangesResult> OnSaveChanges();
+        void OnSaveChanges();
 
         /// <summary>
         /// A callback the IUnitOfWork instance calls after saving changes to the database.
         /// Used for domain/business logic.
         /// </summary>
-        /// <returns>Collection of errors that occured.</returns>
-        ICollection<SaveChangesResult> PostSaveChanges();
+        void PostSaveChanges();
     }
 }
 

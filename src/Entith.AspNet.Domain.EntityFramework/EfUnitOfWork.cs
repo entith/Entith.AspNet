@@ -16,24 +16,11 @@ namespace Entith.AspNet.Domain.EntityFramework
             _context = context;
         }
 
-        public override SaveChangesResults SaveChanges()
+        public override void SaveChanges()
         {
-            SaveChangesResults results = base.SaveChanges();
-
-            if(results.HasErrors)
-                return results;
-
-            try
-            {
-                _context.SaveChanges();
-                base.PostSaveChanges();
-            }
-            catch (Exception e)
-            {
-                results.Add(new ExceptionSaveChangesResult(e, SaveChangesResultType.Error, false));
-            }
-
-            return results;
+            base.SaveChanges();
+            _context.SaveChanges();
+            base.PostSaveChanges();
         }
 
         public override void Dispose()

@@ -14,7 +14,7 @@ namespace Entith.AspNet.Domain
         /// Persists all pending changes.
         /// </summary>
         /// <returns>The result of the save attempt.</returns>
-        SaveChangesResults SaveChanges();
+        void SaveChanges();
 
         /// <summary>
         /// Returns an instance of a repository for the specified entity type.

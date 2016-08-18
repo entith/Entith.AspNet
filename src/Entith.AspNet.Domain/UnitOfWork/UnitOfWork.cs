@@ -27,32 +27,24 @@ namespace Entith.AspNet.Domain
         public abstract void ClearChanges(IEntity entity);
         public abstract void ClearAllChanges();
 
-        public virtual SaveChangesResults SaveChanges()
+        public virtual void SaveChanges()
         {
             List<SaveChangesResult> result = new List<SaveChangesResult>();
 
             foreach (IDomainService service in _services)
             {
-                var callbackResult = service.OnSaveChanges();
-                if (callbackResult != null)
-                    result.AddRange(callbackResult);
+                service.OnSaveChanges();
             }
-
-            return new SaveChangesResults(result.ToArray());
         }
 
-        public SaveChangesResults PostSaveChanges()
+        public void PostSaveChanges()
         {
             List<SaveChangesResult> result = new List<SaveChangesResult>();
 
             foreach (IDomainService service in _services)
             {
-                var callbackResult = service.PostSaveChanges();
-                if (callbackResult != null)
-                    result.AddRange(callbackResult);
+                service.PostSaveChanges();
             }
-            
-            return new SaveChangesResults(result.ToArray()); ;
         }
 
         public void RegisterService(IDomainService service)

@@ -16,9 +16,9 @@ TODO
 
 If you don't need any special methods or business logic, you can use the stock `DomainService<TEntity, TKey>` class. In your DI framework, register `DomainService<TEntity, TKey` as an `IDomainService<TEntity, TKey>`, obviously setting `TEntity` and `TKey` to your entity type and its key type. In the constructors of dependent classes, use `IDomainService<TEntity, TKey>`. You will also want to register the ORM-specific implementation of the `IRepository` class as `IRepository<TEntity, TKey>`.
 
-## Custom methods & domain logic
+## Custom methods
 
-If you wish to include custom methods or any business logic, you'll have to implement the `IDomainService` interface yourself. The easiest way to do this is to extend the `IDomainService` interface and `DomainService` class :
+If you wish to include custom methods, you'll have to implement the `IDomainService` interface yourself. The easiest way to do this is to extend the `IDomainService` interface and `DomainService` class :
 
 ```C#
 public interface IPersonService : IDomainService<Person, int>
@@ -72,7 +72,6 @@ public abstract class PersonService<TRepository>
         return Repository.Get(id);
     }
 
-    // Add any business logic code as well.
     // Since this class is abstract, code here can call the eager loading
     // methods and assume they will be correctly implemented elsewhere.
 }
@@ -104,3 +103,34 @@ public class PersonService : PersonService<IEfRepository<Person, int>>
 }
 
 ```
+
+## Domain Logic
+
+Domain logic should be implemented by extending the `LogicUnit` class. Each logic unit should represent a discreet piece of business logic. To create a logic unit for an entity, extend the `LogicUnit` class:
+
+```C#
+public class PersonLogicUnit : LogicUnit<Person, int>
+{
+    public PersonLogicUnit_Test1(
+        IUnitOfWork uow,
+        IDomainService<Person, int> service,
+        IRepository<Person, int> repository)
+        : base(uow, service, repository)
+    {
+    }
+}
+```
+
+You don't need to register this class anywhere. Any `DomainService<Person, int>` instance (either the stock one or a custom child class) will find all classes that extend `LogicUnit<Person, int>` and will wire them up for you.
+
+To do the actual work, your can override any of the following methods that LogicUnit provide:
+* `void OnAdd(TEntity entity)` - Called right before any calls to the repositories `Add()` method.
+* `void OnRemove(TEntity entity)` - Called right before any calls to the repositories `Remove()` method.
+* `void PostAdd(TEntity entity)` - Called right after any calls to the repositories `Add()` method.
+* `void PostRemove(TEntity entity)` - Called right after any calls to the repositories `Remove()` method.
+* `void OnSaveChanges()` - Called right before the `UnitOfWork.SaveChanges()` method.
+* `void PostSaveChanges()` - Called right after the `UnitOfWork.SaveChanges()` method.
+
+__Note:__ `AddRange()` and `RemoveRange()` call `Add()` and `Remove()` for each entity passed to them.
+
+`LogicUnit` also provide the `Uow`, `Service`, and `Repository` properties that you can use in any of the above methods.

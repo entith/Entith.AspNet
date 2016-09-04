@@ -16,6 +16,13 @@ namespace Entith.AspNet.Domain
         int Count { get; }
 
         /// <summary>
+        /// The number of pages
+        /// </summary>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        int GetPages(int pageSize);
+
+        /// <summary>
         /// Gets a range of entities specified by the index and count
         /// </summary>
         /// <returns>Entities in range.</returns>

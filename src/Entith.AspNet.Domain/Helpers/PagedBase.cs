@@ -64,6 +64,12 @@ namespace Entith.AspNet.Domain
         {
             return new OrderedPaged<T>(source.OrderByDescending(orderBy));
         }
+
+        public int GetPages(int pageSize)
+        {
+            int count = Count;
+            return (count / pageSize) + ((count % pageSize) == 0 ? 0 : 1);
+        }
     }
 }
 

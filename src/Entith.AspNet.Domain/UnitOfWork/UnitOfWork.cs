@@ -58,6 +58,13 @@ namespace Entith.AspNet.Domain
         {
             return _repositories.OfType<TRepository>().FirstOrDefault();
         }
+
+        public IDomainService<TEntity, TKey> GetService<TEntity, TKey>()
+            where TEntity : class, IEntity<TKey>
+            where TKey : IEquatable<TKey>
+        {
+            return _services.OfType<IDomainService<TEntity, TKey>>().FirstOrDefault();
+        }
     }
 }
 

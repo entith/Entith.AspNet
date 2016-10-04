@@ -73,7 +73,7 @@ namespace Entith.AspNet.Domain
         /// Adds a collection of entities to the repository.
         /// </summary>
         /// <param name="entities">The entities to add.</param>
-        void AddRange(IEnumerable<TEntity> entities);
+        //void AddRange(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Remove the specified entity from the repository.
@@ -85,7 +85,7 @@ namespace Entith.AspNet.Domain
         /// Removes a collection of entities from the repository.
         /// </summary>
         /// <param name="entities">The entities to remove.</param>
-        void RemoveRange(IEnumerable<TEntity> entities);
+        //void RemoveRange(IEnumerable<TEntity> entities);
     }
 
     /// <summary>

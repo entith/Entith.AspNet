@@ -26,6 +26,10 @@ namespace Entith.AspNet.Domain
             where TEntity : class, IEntity 
             where TRepository : IRepository<TEntity>;
 
+        IDomainService<TEntity, TKey> GetService<TEntity, TKey>()
+            where TEntity : class, IEntity<TKey>
+            where TKey : IEquatable<TKey>;
+
         /// <summary>
         /// Binds the service to this UnitOfWork instance.
         /// </summary>

@@ -153,7 +153,8 @@ namespace Entith.AspNet.Domain
 
         public virtual void AddRange(IEnumerable<TEntity> entities)
         {
-            Repository.AddRange(entities);
+            foreach (TEntity entity in entities)
+                Add(entity);
         }
 
         public virtual void Remove(TEntity entity)
@@ -163,7 +164,8 @@ namespace Entith.AspNet.Domain
 
         public virtual void RemoveRange(IEnumerable<TEntity> entities)
         {
-            Repository.RemoveRange(entities);
+            foreach (TEntity entity in entities)
+                Remove(entity);
         }
 
         #endregion

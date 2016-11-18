@@ -6,13 +6,18 @@ namespace Entith.AspNet.Domain
 {
     public abstract class UnitOfWork : IUnitOfWork
     {
-        protected ICollection<IDomainService> _services;
+        protected IEnumerable<IDomainService> _services;
         protected IEnumerable<IRepository> _repositories;
 
-        public UnitOfWork(IEnumerable<IRepository> repositories)
+        public UnitOfWork(IEnumerable<IRepository> repositories, IEnumerable<IDomainService> services)
         {
-            _services = new List<IDomainService>();
+            _services = services;
             _repositories = repositories;
+
+            foreach(var service in services)
+            {
+                service.Init(this);
+            }
         }
 
         public abstract void Dispose();
@@ -45,11 +50,6 @@ namespace Entith.AspNet.Domain
             {
                 service.PostSaveChanges();
             }
-        }
-
-        public void RegisterService(IDomainService service)
-        {
-            _services.Add(service);
         }
 
         public TRepository GetRepository<TEntity, TRepository>()

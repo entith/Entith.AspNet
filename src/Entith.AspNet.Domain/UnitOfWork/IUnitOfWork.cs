@@ -34,7 +34,7 @@ namespace Entith.AspNet.Domain
         /// Binds the service to this UnitOfWork instance.
         /// </summary>
         /// <param name="service">The service to bind.</param>
-        void RegisterService(IDomainService service);
+        //void RegisterService(IDomainService service);
 
         /// <summary>
         /// Gets all pending newly added entities.

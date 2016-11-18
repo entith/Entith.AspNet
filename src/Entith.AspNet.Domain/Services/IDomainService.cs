@@ -136,6 +136,8 @@ namespace Entith.AspNet.Domain
     /// </summary>
     public interface IDomainService
     {
+        void Init(IUnitOfWork uow);
+
         /// <summary>
         /// Triggers the Unit Of Work to save all pending changes.
         /// This can be called from any IDomainService instance bound

@@ -15,9 +15,9 @@ namespace Entith.AspNet.Domain
     {
         protected TRepository CustomRepository { get; private set; }
 
-        public DomainService(IUnitOfWork uow)
-            : base(uow)
+        public override void Init(IUnitOfWork uow)
         {
+            base.Init(uow);
             CustomRepository = uow.GetRepository<TEntity, TRepository>();
         }
     }
@@ -51,9 +51,12 @@ namespace Entith.AspNet.Domain
         /// Initializes a new instance of the <see cref="Entith.AspNet.Domain.DomainService`2"/> class.
         /// </summary>
         /// <param name="uow">The unit of work instance to bind to.</param>
-        public DomainService(IUnitOfWork uow)
+        //public DomainService()
+        //{
+        //}
+        public virtual void Init(IUnitOfWork uow)
         {
-            uow.RegisterService(this);
+            //uow.RegisterService(this);
             Uow = uow;
 
             LogicUnits = new HashSet<ILogicUnit<TEntity, TKey>>();

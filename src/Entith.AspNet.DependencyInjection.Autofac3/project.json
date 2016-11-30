@@ -1,9 +1,9 @@
 ﻿{
-  "version": "0.0.1-*",
+  "version": "0.0.3-*",
 
   "dependencies": {
     "Autofac": "3.5.2",
-    "Entith.AspNet.DependencyInjection": "0.0.1-*",
+    "Entith.AspNet.Domain": "0.0.3-*"
   },
 
   "frameworks": {

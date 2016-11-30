@@ -1,18 +1,21 @@
 {
-  "version": "0.0.2-*",
+  "version": "0.0.3-*",
 
   "dependencies": {
     "Autofac.Extensions.DependencyInjection": "4.0.0-rc2-240",
-    "Entith.AspNet.DependencyInjection": "0.0.1-*",
+    "Entith.AspNet.Domain": "0.0.3-*"
   },
 
   "frameworks": {
-    "netstandard1.5": {
+    "netstandard1.6": {
       "imports": "dnxcore50",
       "dependencies": {
         "NETStandard.Library": "1.6.0"
       }
     },
-    "net451": {}
+    "net451": {
+      "dependencies": {
+      }
+    }
   }
 }

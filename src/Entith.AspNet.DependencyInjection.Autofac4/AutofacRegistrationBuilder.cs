@@ -1,16 +1,17 @@
 ﻿using Autofac;
+using Entith.AspNet.Domain.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Entith.AspNet.DependencyInjection.Autofac3
+namespace Entith.AspNet.DependencyInjection.Autofac4
 {
-    public class SimpleAutofacRegistrationBuilder : ISimpleRegistrationBuilder
+    internal class AutofacRegistrationBuilder : Entith.AspNet.Domain.DependencyInjection.IRegistrationBuilder
     {
         private ContainerBuilder _builder;
 
-        public SimpleAutofacRegistrationBuilder(ContainerBuilder builder)
+        public AutofacRegistrationBuilder(ContainerBuilder builder)
         {
             _builder = builder;
         }
@@ -23,6 +24,14 @@ namespace Entith.AspNet.DependencyInjection.Autofac3
         public void RegisterTypeAsSelf<TType>()
         {
             _builder.RegisterType<TType>().AsSelf().InstancePerLifetimeScope();
+        }
+    }
+
+    public static class Extensions
+    {
+        public static IDomainBuilder GetDomainBuilder(this ContainerBuilder builder)
+        {
+            return new DomainBuilder(new AutofacRegistrationBuilder(builder));
         }
     }
 }

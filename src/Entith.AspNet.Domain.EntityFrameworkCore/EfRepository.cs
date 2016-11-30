@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Entith.AspNet.Domain.EntityFramework
 {
-    public class EfRepository<TEntity, TKey, TDbContext> : IRepository<TEntity, TKey> 
+    public class EfRepository<TEntity, TKey, TDbContext> : IEfRepository<TEntity, TKey> 
         where TEntity : class, IEntity<TKey>
         where TKey : IEquatable<TKey>
         where TDbContext : DbContext
@@ -53,20 +53,20 @@ namespace Entith.AspNet.Domain.EntityFramework
             Context.Set<TEntity>().Add(entity);
         }
 
-        public void AddRange(IEnumerable<TEntity> entities)
-        {
-            Context.Set<TEntity>().AddRange(entities);
-        }
+        //public void AddRange(IEnumerable<TEntity> entities)
+        //{
+        //    Context.Set<TEntity>().AddRange(entities);
+        //}
 
         public void Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
-        {
-            Context.Set<TEntity>().RemoveRange(entities);
-        }
+        //public void RemoveRange(IEnumerable<TEntity> entities)
+        //{
+        //    Context.Set<TEntity>().RemoveRange(entities);
+        //}
     }
 }
 

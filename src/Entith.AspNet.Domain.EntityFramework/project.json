@@ -1,9 +1,8 @@
 ﻿{
-  "version": "0.0.1-*",
+  "version": "0.0.3-*",
 
   "dependencies": {
-    "Entith.AspNet.DependencyInjection": "0.0.1-*",
-    "Entith.AspNet.Domain": "0.0.1-*",
+    "Entith.AspNet.Domain": "0.0.3-*",
     "EntityFramework": "6.1.3"
   },
 

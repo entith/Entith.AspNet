@@ -6,13 +6,11 @@ namespace Entith.AspNet.Domain
 {
     public abstract class UnitOfWork : IUnitOfWork
     {
-        protected ICollection<IDomainService> _services;
-        protected IEnumerable<IRepository> _repositories;
+        private IDomainManager _domainManager;
 
-        public UnitOfWork(IEnumerable<IRepository> repositories)
+        public void RegisterDomainManager(IDomainManager manager)
         {
-            _services = new List<IDomainService>();
-            _repositories = repositories;
+            _domainManager = manager;
         }
 
         public abstract void Dispose();
@@ -27,45 +25,18 @@ namespace Entith.AspNet.Domain
         public abstract void ClearChanges(IEntity entity);
         public abstract void ClearAllChanges();
 
-        public virtual SaveChangesResults SaveChanges()
+        public virtual void SaveChanges()
         {
-            List<SaveChangesResult> result = new List<SaveChangesResult>();
+            if (_domainManager != null)
+                _domainManager.OnSaveChanges();
 
-            foreach (IDomainService service in _services)
-            {
-                var callbackResult = service.OnSaveChanges();
-                if (callbackResult != null)
-                    result.AddRange(callbackResult);
-            }
+            PerformSaveChanges();
 
-            return new SaveChangesResults(result.ToArray());
+            if (_domainManager != null)
+                _domainManager.PostSaveChanges();
         }
 
-        public SaveChangesResults PostSaveChanges()
-        {
-            List<SaveChangesResult> result = new List<SaveChangesResult>();
-
-            foreach (IDomainService service in _services)
-            {
-                var callbackResult = service.PostSaveChanges();
-                if (callbackResult != null)
-                    result.AddRange(callbackResult);
-            }
-            
-            return new SaveChangesResults(result.ToArray()); ;
-        }
-
-        public void RegisterService(IDomainService service)
-        {
-            _services.Add(service);
-        }
-
-        public TRepository GetRepository<TEntity, TRepository>()
-            where TEntity : class, IEntity 
-            where TRepository : IRepository<TEntity>
-        {
-            return _repositories.OfType<TRepository>().FirstOrDefault();
-        }
+        protected abstract void PerformSaveChanges();
     }
 }
 

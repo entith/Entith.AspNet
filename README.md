@@ -1,20 +1,146 @@
 Service and repository libraries for ORM-agnostic data access and domain logic/business rules.
 
+# Overview
+
+There are three main types of objects that you'll be working with:
+
+* __Entities__ - These are your POCO database entities
+* __Services__ - These provide ORM-agnostic CRUD operations to your database; this is where most custom read functions will be defined (ex. eager loading certain properties)
+* __Logic Units__ - These are used to define discreet bits of business logic
+
+Here are a few other object you'll likely use, but will likely not need to implement/derive from yourself:
+
+* __Repository__ - These will have a specific implementation for each supported ORM and provide basic database CRUD operations; typically used by Services and Logic Units
+* __Unit of Work__ - This will also have a specific implementation for each ORM and provide methods for saving, reviewing, and clearing pending changes; typically used by Services and Logic Units
+* __Logic Manager__ - Handles business logic by intercepting calls to Repository methods and calling appropriate Logic Unit methods
+
 # Getting Started
 
-TODO
+You'll need to install the `Entith.AspNet.Domain` library, an ORM implementation (currently EntityFramework6 and EntityFrameworkCore are supported), and optionally, a DI framework implementation (currently Autofac3 and Autofac4 are supported). For most examples, we'll be using EntityFrameworkCore and Autofac4.
+
+```
+PM> Install-Package Entith.AspNet.Domain
+PM> Install-Package Entith.AspNet.Domain.EntityFrameworkCore
+PM> Install-Package Entith.AspNet.DependencyInjection.Autofac4
+```
+
+For the most basic set up, you'll need to define your entities and wire up your ORM and dependency injection. There are some helpers to simplify the DI setup.
+
+Lets start with a couple of entities:
+
+```C#
+// All entities should implement IEntity. The type parameter specifies the type
+// of the ID field
+public class Post : IEntity<int>
+{
+  public int Id { get; set; }
+  public string Title { get; set; }
+  public string Content { get; set; }
+  public int AuthorId { get; set; }
+
+  public virtual User Author { get; set; }
+}
+
+public class User : IEntity<int>
+{
+  public int Id { get; set; }
+  public string Username { get; set; }
+
+  public virtual ICollection<Post> Posts { get; set; }
+}
+```
+
+You'll then need to configure your ORM with these entities and relationships. In the case of EntityFramework, you'll need to create a `DbContext` and wire up the relationship between `Post` and `User`.
+
+Each DI implementation should provide a means of getting an `IDomainBuilder` instance. In the case of Autofac, there is an extension method `GetDomainBuilder()` on Autofac's `ContainerBuilder` class.
+
+For now, we will use the basic Service class provided by the library and the basic Repository class provided by the EntityFramework implementation:
+
+```C#
+// builder is the Autoface ContainerBuilder used for the project.
+IDomainBuilder domainBuilder = builder.GetDomainBuilder();
+
+// Bootstrap some of the basic, global classes.
+// Note that SampleDbContext should also needs to be registered with DI, but
+// that is outside the scope of this document
+domainBuilder.BootstrapDomain<EfUnitOfWork<SampleDbContext>>();
+
+domainBuilder.RegisterEntity<Post, int>()
+  .WithDefaultService()
+  .WithRepository<EfRepository<Post, int, SampleDbContext>, IEfRepository<Post, int>>();
+
+domainBuilder.RegisterEntity<User, int>()
+  .WithDefaultService()
+  .WithRepository<EfRepository<User, int, SampleDbContext>, IEfRepository<User, int>>();
+```
+
+And that should be all. You can now get instances of `IDomainService<Post, int>` and `IDomainService<User, int>` from the DI container and use them in your classes.
 
 # Entities
 
-TODO
+All entities should implement `IEntity<TKey>`, which just provides a primary key property `Id` of type `TKey`:
+
+```c#
+public class SampleEntity : IEntity<int>
+{
+  public int Id { get; set; }
+}
+```
+
+You can use any type for the key that your ORM supports:
+
+```C#
+public class StringEntity : IEntity<string>
+{
+  public string Id { get; set; }
+}
+
+public class FloatEntity : IEntity<float>
+{
+  public float Id { get; set; }
+}
+
+public class GuidEntity : IEntity<Guid>
+{
+  public Guid Id { get; set; }
+}
+```
 
 ## Custom Primary Key
 
-TODO
+Unfortunately there is no clean way to change the name of the primary key `Id` property. If you need to do so, you have two options: map the property to a different table column in your ORM or make the getter/setter methods for `Id` read/write from/to another property and ignore the `Id` property in your ORM.
+
+```C#
+public class Customer : IEntity<int>
+{
+  public int Id
+  {
+    get { return CustomerNumber; }
+    set { CustomerNumber = value; }
+  }
+  public int CustomerNumber { get; set; }
+}
+```
 
 # Services
 
-If you don't need any special methods or business logic, you can use the stock `DomainService<TEntity, TKey>` class. In your DI framework, register `DomainService<TEntity, TKey` as an `IDomainService<TEntity, TKey>`, obviously setting `TEntity` and `TKey` to your entity type and its key type. In the constructors of dependent classes, use `IDomainService<TEntity, TKey>`. You will also want to register the ORM-specific implementation of the `IRepository` class as `IRepository<TEntity, TKey>`.
+If you don't need any special methods in your service, you can use the stock `DomainService<TEntity, TKey>` class. Otherwise, see instructions below on creating custom Service classes.
+
+To register services using the DI helpers:
+
+```C#
+// Stock DomainService class
+domainBuilder.RegisterEntity<Person, int>()
+  .WithDefaultService()
+  .WithRepository(...);
+
+// Custom service class
+domainBuilder.RegisterEntity<Post, int>()
+  .WithService<PostService, IPostService>()
+  .WithRepository(...);
+```
+
+Don't forget to register an appropriate `IRepository` for each entity.
 
 ## Custom methods
 
@@ -28,8 +154,8 @@ public interface IPersonService : IDomainService<Person, int>
 
 public class PersonService : DomainService<Person, int>, IPersonService
 {
-    public DomainService(IUnitOfWork uow)
-        : base(uow)
+    public PersonService(IUnitOfWork uow, IRepositoryManager repositoryManager)
+        :base (uow, repositoryManager)
     {
         // Add any additional dependencies here
     }
@@ -56,8 +182,8 @@ public abstract class PersonService<TRepository>
     : DomainService<Person, int, TRepository>, IPersonService
     where TRepository : IRepository<Person, int>
 {
-    public DomainService(IUnitOfWork uow)
-        : base(uow)
+    public PersonService(IUnitOfWork uow, IRepositoryManager repositoryManager)
+        :base (uow, repositoryManager)
     {
         // Add any additional dependencies here
     }
@@ -81,8 +207,8 @@ public abstract class PersonService<TRepository>
 // and abstract class should still work.
 public class PersonService : PersonService<IEfRepository<Person, int>>
 {
-    public DomainService(IUnitOfWork uow)
-        : base(uow)
+    public PersonService(IUnitOfWork uow, IRepositoryManager repositoryManager)
+        :base (uow, repositoryManager)
     {
         // Add any additional dependencies here
     }
@@ -104,24 +230,25 @@ public class PersonService : PersonService<IEfRepository<Person, int>>
 
 ```
 
-## Domain Logic
+# Logic Units
 
 Domain logic should be implemented by extending the `LogicUnit` class. Each logic unit should represent a discreet piece of business logic. To create a logic unit for an entity, extend the `LogicUnit` class:
 
 ```C#
 public class PersonLogicUnit : LogicUnit<Person, int>
 {
-    public PersonLogicUnit_Test1(
-        IUnitOfWork uow,
-        IDomainService<Person, int> service,
-        IRepository<Person, int> repository)
-        : base(uow, service, repository)
+    protected override void Init()
     {
+        // Any initialization code here.
     }
 }
 ```
 
-You don't need to register this class anywhere. Any `DomainService<Person, int>` instance (either the stock one or a custom child class) will find all classes that extend `LogicUnit<Person, int>` and will wire them up for you.
+You'll need to register the `LogicUnit` in your DI framework:
+
+```C#
+domainBuilder.RegisterLogicUnit<PersonLogicUnit>();
+```
 
 To do the actual work, your can override any of the following methods that LogicUnit provide:
 * `void OnAdd(TEntity entity)` - Called right before any calls to the repositories `Add()` method.
@@ -133,4 +260,4 @@ To do the actual work, your can override any of the following methods that Logic
 
 __Note:__ `AddRange()` and `RemoveRange()` call `Add()` and `Remove()` for each entity passed to them.
 
-`LogicUnit` also provide the `Uow`, `Service`, and `Repository` properties that you can use in any of the above methods.
+`LogicUnit` also provide the `ChangeTracker` and `RepoManager` properties that you can use in any of the above methods or the `Init()` method. `ChangeTracker` provides `GetAdded()`, `GetModified()`, and `GetRemoved()`. `RepoManager` lets you get any registered repository.

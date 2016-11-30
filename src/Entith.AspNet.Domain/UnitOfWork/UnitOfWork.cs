@@ -6,18 +6,11 @@ namespace Entith.AspNet.Domain
 {
     public abstract class UnitOfWork : IUnitOfWork
     {
-        protected IEnumerable<IDomainService> _services;
-        protected IEnumerable<IRepository> _repositories;
+        private IDomainManager _domainManager;
 
-        public UnitOfWork(IEnumerable<IRepository> repositories, IEnumerable<IDomainService> services)
+        public void RegisterDomainManager(IDomainManager manager)
         {
-            _services = services;
-            _repositories = repositories;
-
-            foreach(var service in services)
-            {
-                service.Init(this);
-            }
+            _domainManager = manager;
         }
 
         public abstract void Dispose();
@@ -34,37 +27,16 @@ namespace Entith.AspNet.Domain
 
         public virtual void SaveChanges()
         {
-            List<SaveChangesResult> result = new List<SaveChangesResult>();
+            if (_domainManager != null)
+                _domainManager.OnSaveChanges();
 
-            foreach (IDomainService service in _services)
-            {
-                service.OnSaveChanges();
-            }
+            PerformSaveChanges();
+
+            if (_domainManager != null)
+                _domainManager.PostSaveChanges();
         }
 
-        public void PostSaveChanges()
-        {
-            List<SaveChangesResult> result = new List<SaveChangesResult>();
-
-            foreach (IDomainService service in _services)
-            {
-                service.PostSaveChanges();
-            }
-        }
-
-        public TRepository GetRepository<TEntity, TRepository>()
-            where TEntity : class, IEntity 
-            where TRepository : IRepository<TEntity>
-        {
-            return _repositories.OfType<TRepository>().FirstOrDefault();
-        }
-
-        public IDomainService<TEntity, TKey> GetService<TEntity, TKey>()
-            where TEntity : class, IEntity<TKey>
-            where TKey : IEquatable<TKey>
-        {
-            return _services.OfType<IDomainService<TEntity, TKey>>().FirstOrDefault();
-        }
+        protected abstract void PerformSaveChanges();
     }
 }
 

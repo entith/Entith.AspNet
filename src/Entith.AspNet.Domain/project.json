@@ -1,9 +1,8 @@
 {
-  "version": "0.0.2.8-*",
+  "version": "0.0.3-*",
 
   "dependencies": {
     "Castle.Core": "4.0.0-beta001",
-    "Entith.AspNet.DependencyInjection": "0.0.1-*",
     "System.Linq.Expressions": "4.1.0",
     "System.Linq.Queryable": "4.0.1",
     "Microsoft.Extensions.DependencyModel": "1.0.0"

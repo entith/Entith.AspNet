@@ -8,83 +8,38 @@ using Castle.DynamicProxy;
 
 namespace Entith.AspNet.Domain
 {
-    public abstract class DomainService<TEntity, TKey, TRepository> : DomainService<TEntity, TKey>, IDomainService<TEntity, TKey, TRepository>
+    public abstract class DomainService<TEntity, TKey, TRepository> : DomainService<TEntity, TKey>//, IDomainService<TEntity, TKey, TRepository>
         where TEntity : class, IEntity<TKey>
         where TKey : IEquatable<TKey>
-        where TRepository : IRepository<TEntity, TKey>
+        where TRepository : class, IRepository<TEntity, TKey>
     {
         protected TRepository CustomRepository { get; private set; }
 
-        public override void Init(IUnitOfWork uow)
+        public DomainService(IUnitOfWork uow, IRepositoryManager repositoryManager)
+            :base (uow, repositoryManager)
         {
-            base.Init(uow);
-            CustomRepository = uow.GetRepository<TEntity, TRepository>();
+            CustomRepository = RepositoryManager.GetRepository<TEntity, TRepository>();
         }
     }
 
-    /// <summary>
-    /// Basic implementation of the IDomainService interface. Can be used
-    /// as is or extended if more advanced methods are needed or you need
-    /// to add domain logic.
-    /// </summary>
     public class DomainService<TEntity, TKey> : IDomainService<TEntity, TKey>
         where TEntity : class, IEntity<TKey>
         where TKey : IEquatable<TKey>
     {
         #region ctor + fields
 
-        /// <summary>
-        /// The repository instance this service wraps around.
-        /// </summary>
         protected IRepository<TEntity, TKey> Repository { get; private set; }
 
-        /// <summary>
-        /// The unit of work this service is bound to.
-        /// </summary>
         protected IUnitOfWork Uow { get; private set; }
 
-        protected ICollection<ILogicUnit<TEntity, TKey>> LogicUnits { get; private set; }
-
-        private static IEnumerable<Type> _logicUnitTypes;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Entith.AspNet.Domain.DomainService`2"/> class.
-        /// </summary>
-        /// <param name="uow">The unit of work instance to bind to.</param>
-        //public DomainService()
-        //{
-        //}
-        public virtual void Init(IUnitOfWork uow)
+        protected IRepositoryManager RepositoryManager { get; set; }
+        
+        public DomainService(IUnitOfWork uow, IRepositoryManager repositoryManager)
         {
-            //uow.RegisterService(this);
             Uow = uow;
+            RepositoryManager = repositoryManager;
 
-            LogicUnits = new HashSet<ILogicUnit<TEntity, TKey>>();
-
-            // Wrap the repository in a proxy to intercept add and remove calls for business logic.
-            var repo = uow.GetRepository<TEntity, IRepository<TEntity, TKey>>();
-            var interceptor = new RepositoryInterceptor<TEntity, TKey>(this);
-            var dp = new ProxyGenerator();
-            Repository = dp.CreateInterfaceProxyWithTarget(repo, interceptor);
-
-
-            // Add all applicable logic units found in application.
-            if(_logicUnitTypes == null)
-                _logicUnitTypes = AssemblyHelper.GetAssemblies()
-                    .Where(t => typeof(ILogicUnit<TEntity, TKey>).IsAssignableFrom(t));
-            
-            foreach(Type t in _logicUnitTypes)
-            {
-                try
-                {
-                    ILogicUnit<TEntity, TKey> logicUnit = (ILogicUnit<TEntity, TKey>) Activator.CreateInstance(t, uow, this, Repository);
-                    LogicUnits.Add(logicUnit);
-                }
-                catch
-                {
-                    Console.WriteLine("Could not instantiate logic unit of type " + t.FullName);
-                }
-            }
+            Repository = RepositoryManager.GetRepository<TEntity, IRepository<TEntity, TKey>>();
         }
 
         #endregion
@@ -173,47 +128,11 @@ namespace Entith.AspNet.Domain
 
         #endregion
 
-        #region UOW + domain logic
+        #region UOW
 
         public void SaveChanges()
         {
             Uow.SaveChanges();
-        }
-
-        public void OnSaveChanges()
-        {
-            foreach (ILogicUnit unit in LogicUnits)
-                unit.OnSaveChanges();
-        }
-
-        public void PostSaveChanges()
-        {
-            foreach (ILogicUnit unit in LogicUnits)
-                unit.PostSaveChanges();
-        }
-
-        public void OnAdd(TEntity entity)
-        {
-            foreach (ILogicUnit<TEntity, TKey> unit in LogicUnits)
-                unit.OnAdd(entity);
-        }
-
-        public void OnRemove(TEntity entity)
-        {
-            foreach (ILogicUnit<TEntity, TKey> unit in LogicUnits)
-                unit.OnRemove(entity);
-        }
-
-        public void PostAdd(TEntity entity)
-        {
-            foreach (ILogicUnit<TEntity, TKey> unit in LogicUnits)
-                unit.PostAdd(entity);
-        }
-
-        public void PostRemove(TEntity entity)
-        {
-            foreach (ILogicUnit<TEntity, TKey> unit in LogicUnits)
-                unit.PostRemove(entity);
         }
 
         #endregion

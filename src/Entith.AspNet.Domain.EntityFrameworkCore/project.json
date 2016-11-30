@@ -1,14 +1,13 @@
 {
-  "version": "0.0.2-*",
+  "version": "0.0.3-*",
 
   "dependencies": {
-    "Entith.AspNet.DependencyInjection": "0.0.1-*",
-    "Entith.AspNet.Domain": "0.0.1-*",
-    "Microsoft.EntityFrameworkCore.Relational": "1.0.0-rc2-final",
+    "Entith.AspNet.Domain": "0.0.3-*",
+    "Microsoft.EntityFrameworkCore.Relational": "1.0.0-rc2-final"
   },
 
   "frameworks": {
-    "netstandard1.5": {
+    "netstandard1.6": {
       "imports": [
         "dnxcore50",
         "portable-net452+win81"

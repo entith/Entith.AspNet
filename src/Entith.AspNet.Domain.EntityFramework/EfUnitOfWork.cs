@@ -11,29 +11,14 @@ namespace Entith.AspNet.Domain.EntityFramework
     {
         protected readonly TDbContext _context;
 
-        public EfUnitOfWork(IEnumerable<IRepository> repositories, TDbContext context) : base(repositories)
+        public EfUnitOfWork(TDbContext context)
         {
             _context = context;
         }
 
-        public override SaveChangesResults SaveChanges()
+        protected override void PerformSaveChanges()
         {
-            SaveChangesResults results = base.SaveChanges();
-
-            if(results.HasErrors)
-                return results;
-
-            try
-            {
-                _context.SaveChanges();
-                base.PostSaveChanges();
-            }
-            catch (Exception e)
-            {
-                results.Add(new ExceptionSaveChangesResult(e, SaveChangesResultType.Error, false));
-            }
-
-            return results;
+            _context.SaveChanges();
         }
 
         public override void Dispose()

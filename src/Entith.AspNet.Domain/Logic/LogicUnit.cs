@@ -20,7 +20,7 @@ namespace Entith.AspNet.Domain
 
         public virtual void PostRemove(TEntity entity) { }
 
-        public override Type GetEntityType()
+        public override sealed Type GetEntityType()
         {
             return typeof(TEntity);
         }
@@ -35,22 +35,22 @@ namespace Entith.AspNet.Domain
             return (TEntity)entity;
         }
 
-        public override void DoAdd(IEntity entity)
+        public override sealed void DoAdd(IEntity entity)
         {
             OnAdd(ConvertEntity(entity));
         }
 
-        public override void DoRemove(IEntity entity)
+        public override sealed void DoRemove(IEntity entity)
         {
             OnRemove(ConvertEntity(entity));
         }
 
-        public override void DoPostAdd(IEntity entity)
+        public override sealed void DoPostAdd(IEntity entity)
         {
             PostAdd(ConvertEntity(entity));
         }
 
-        public override void DoPostRemove(IEntity entity)
+        public override sealed void DoPostRemove(IEntity entity)
         {
             PostRemove(ConvertEntity(entity));
         }

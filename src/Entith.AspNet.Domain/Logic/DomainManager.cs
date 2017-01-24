@@ -19,6 +19,8 @@ namespace Entith.AspNet.Domain
             _logicUnits = logicUnits;
             _repositories = repositories;
 
+            uow.RegisterDomainManager(this);
+
             foreach(var unit in logicUnits)
             {
                 unit.Init(this, uow);

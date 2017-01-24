@@ -9,8 +9,14 @@ namespace Entith.AspNet.Domain
     public abstract class LogicUnit<TEntity> : LogicUnit, ILogicUnit<TEntity>
         where TEntity : class, IEntity
     {
+        protected IRepository<TEntity> Repository { get; set; }
 
+        public override sealed void Init(IRepositoryManager repoManager, IChangeTracker changeTracker)
+        {
+            base.Init(repoManager, changeTracker);
 
+            Repository = repoManager.GetRepository<TEntity, IRepository<TEntity>>();
+        }
 
         public virtual void OnAdd(TEntity entity) { }
 
@@ -20,7 +26,7 @@ namespace Entith.AspNet.Domain
 
         public virtual void PostRemove(TEntity entity) { }
 
-        public override Type GetEntityType()
+        public override sealed Type GetEntityType()
         {
             return typeof(TEntity);
         }
@@ -35,22 +41,22 @@ namespace Entith.AspNet.Domain
             return (TEntity)entity;
         }
 
-        public override void DoAdd(IEntity entity)
+        public override sealed void DoAdd(IEntity entity)
         {
             OnAdd(ConvertEntity(entity));
         }
 
-        public override void DoRemove(IEntity entity)
+        public override sealed void DoRemove(IEntity entity)
         {
             OnRemove(ConvertEntity(entity));
         }
 
-        public override void DoPostAdd(IEntity entity)
+        public override sealed void DoPostAdd(IEntity entity)
         {
             PostAdd(ConvertEntity(entity));
         }
 
-        public override void DoPostRemove(IEntity entity)
+        public override sealed void DoPostRemove(IEntity entity)
         {
             PostRemove(ConvertEntity(entity));
         }
@@ -62,7 +68,7 @@ namespace Entith.AspNet.Domain
         protected IChangeTracker ChangeTracker { get; set; }
         protected IRepositoryManager RepoManager { get; set; }
 
-        public void Init(IRepositoryManager repoManager, IChangeTracker changeTracker)
+        public virtual void Init(IRepositoryManager repoManager, IChangeTracker changeTracker)
         {
             RepoManager = repoManager;
             ChangeTracker = changeTracker;

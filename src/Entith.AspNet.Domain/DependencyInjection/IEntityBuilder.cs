@@ -9,6 +9,9 @@ namespace Entith.AspNet.Domain.DependencyInjection
         where TEntity : class, IEntity<TKey>
         where TKey : IEquatable<TKey>
     {
+        IEntityBuilder<TEntity, TKey> WithRepository<TRepository>()
+            where TRepository : class, IRepository<TEntity, TKey>;
+
         IEntityBuilder<TEntity, TKey> WithRepository<TRepository, TIRepository>()
             where TRepository : class, IRepository<TEntity, TKey>, TIRepository
             where TIRepository : IRepository<TEntity, TKey>;

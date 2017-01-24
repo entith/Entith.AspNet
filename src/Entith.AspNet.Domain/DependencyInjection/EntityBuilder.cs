@@ -25,16 +25,23 @@ namespace Entith.AspNet.Domain.DependencyInjection
             return this;
         }
 
-        public IEntityBuilder<TEntity, TKey> WithRepository<TRepository, TIRepository>()
-            where TRepository : class, IRepository<TEntity, TKey>, TIRepository
-            where TIRepository : IRepository<TEntity, TKey>
+        public IEntityBuilder<TEntity, TKey> WithRepository<TRepository>()
+            where TRepository : class, IRepository<TEntity, TKey>
         {
-            _builder.RegisterTypeAs<TRepository, TIRepository>();
             _builder.RegisterTypeAs<TRepository, IRepository<TEntity, TKey>>();
             _builder.RegisterTypeAs<TRepository, IRepository>();
             _builder.RegisterTypeAsSelf<TRepository>();
 
             return this;
+        }
+
+        public IEntityBuilder<TEntity, TKey> WithRepository<TRepository, TIRepository>()
+            where TRepository : class, IRepository<TEntity, TKey>, TIRepository
+            where TIRepository : IRepository<TEntity, TKey>
+        {
+            _builder.RegisterTypeAs<TRepository, TIRepository>();
+
+            return WithRepository<TRepository>();
         }
 
         public IEntityBuilder<TEntity, TKey> WithService<TService, TIService>()

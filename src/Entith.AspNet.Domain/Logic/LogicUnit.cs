@@ -9,14 +9,8 @@ namespace Entith.AspNet.Domain
     public abstract class LogicUnit<TEntity> : LogicUnit, ILogicUnit<TEntity>
         where TEntity : class, IEntity
     {
-        protected IRepository<TEntity> Repository { get; set; }
 
-        public override sealed void Init(IRepositoryManager repoManager, IChangeTracker changeTracker)
-        {
-            base.Init(repoManager, changeTracker);
 
-            Repository = repoManager.GetRepository<TEntity, IRepository<TEntity>>();
-        }
 
         public virtual void OnAdd(TEntity entity) { }
 
@@ -68,7 +62,7 @@ namespace Entith.AspNet.Domain
         protected IChangeTracker ChangeTracker { get; set; }
         protected IRepositoryManager RepoManager { get; set; }
 
-        public virtual void Init(IRepositoryManager repoManager, IChangeTracker changeTracker)
+        public void Init(IRepositoryManager repoManager, IChangeTracker changeTracker)
         {
             RepoManager = repoManager;
             ChangeTracker = changeTracker;

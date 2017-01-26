@@ -9,6 +9,8 @@ namespace Entith.AspNet.Domain
 {
     public class DomainManager : IDomainManager
     {
+        private static ProxyGenerator ProxyGenerator { get; set; } = new ProxyGenerator();
+
         private IEnumerable<ILogicUnit> _logicUnits;
         private IEnumerable<IRepository> _repositories;
         private IUnitOfWork _uow;
@@ -49,8 +51,8 @@ namespace Entith.AspNet.Domain
         {
             var repo = _repositories.OfType<TRepository>().FirstOrDefault();
             var interceptor = new RepositoryInterceptor<TEntity>(this);
-            var dp = new ProxyGenerator();
-            return dp.CreateInterfaceProxyWithTarget(repo, interceptor);
+            //var dp = new ProxyGenerator();
+            return ProxyGenerator.CreateInterfaceProxyWithTarget(repo, interceptor);
         }
 
         protected ICollection<ILogicUnit> GetUnitsForEntity<TEntity>(TEntity entity)

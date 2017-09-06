@@ -74,7 +74,7 @@ namespace Entith.AspNet.Domain
 
         public virtual void OnSaveChanges() { }
 
-        public virtual void PostSaveChanges() { }
+        public virtual bool PostSaveChanges() { return false; }
 
         public abstract Type GetEntityType();
         public abstract void DoAdd(IEntity entity);

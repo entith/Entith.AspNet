@@ -26,6 +26,11 @@ namespace Entith.AspNet.Domain.EntityFramework
             _context.Dispose();
         }
 
+        public override IEnumerable<IEntity> GetTracked()
+        {
+            return GetTracked<IEntity>();
+        }
+
         public override IEnumerable<IEntity> GetAdded()
         {
             return GetAdded<IEntity>();
@@ -39,6 +44,12 @@ namespace Entith.AspNet.Domain.EntityFramework
         public override IEnumerable<IEntity> GetRemoved()
         {
             return GetRemoved<IEntity>();
+        }
+
+        public override IEnumerable<TEntity> GetTracked<TEntity>()
+        {
+            return _context.ChangeTracker.Entries<TEntity>()
+                .Select(x => x.Entity).ToList();
         }
 
         public override IEnumerable<TEntity> GetAdded<TEntity>()

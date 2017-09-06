@@ -39,10 +39,16 @@ namespace Entith.AspNet.Domain
 
         public void PostSaveChanges()
         {
+            bool shouldSaveAgain = false;
+
             foreach (var unit in _logicUnits)
             {
-                unit.PostSaveChanges();
+                if (unit.PostSaveChanges())
+                    shouldSaveAgain = true;
             }
+
+            if (shouldSaveAgain)
+                _uow.SaveChanges();
         }
 
         public TRepository GetRepository<TEntity, TRepository>()

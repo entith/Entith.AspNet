@@ -1,5 +1,5 @@
 ﻿{
-  "version": "0.0.3.1-*",
+  "version": "0.0.3.5-*",
 
   "dependencies": {
     "Entith.AspNet.Domain": "0.0.3-*",

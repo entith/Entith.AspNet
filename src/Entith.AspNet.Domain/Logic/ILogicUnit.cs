@@ -18,7 +18,7 @@ namespace Entith.AspNet.Domain
     {
         void Init(IRepositoryManager repoManager, IChangeTracker changeTracker);
         void OnSaveChanges();
-        void PostSaveChanges();
+        bool PostSaveChanges();
         Type GetEntityType();
 
         void DoAdd(IEntity entity);

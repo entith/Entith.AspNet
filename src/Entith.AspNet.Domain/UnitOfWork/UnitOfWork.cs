@@ -14,10 +14,13 @@ namespace Entith.AspNet.Domain
         }
 
         public abstract void Dispose();
+
+        public abstract IEnumerable<IEntity> GetTracked();
         public abstract IEnumerable<IEntity> GetAdded();
         public abstract IEnumerable<IEntity> GetRemoved();
         public abstract IEnumerable<IEntity> GetModified();
 
+        public abstract IEnumerable<TEntity> GetTracked<TEntity>() where TEntity : class, IEntity;
         public abstract IEnumerable<TEntity> GetAdded<TEntity>() where TEntity : class, IEntity;
         public abstract IEnumerable<TEntity> GetModified<TEntity>() where TEntity : class, IEntity;
         public abstract IEnumerable<TEntity> GetRemoved<TEntity>() where TEntity : class, IEntity;

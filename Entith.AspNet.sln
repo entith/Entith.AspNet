@@ -1,24 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AB94F2CB-817C-41F9-97F1-94D322D3FDB5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7181AE2E-3FA1-4BA5-BE87-977277F4BFCC}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entith.AspNet.DependencyInjection.Autofac4", "src\Entith.AspNet.DependencyInjection.Autofac4\Entith.AspNet.DependencyInjection.Autofac4.csproj", "{DE494689-1F85-419B-BE55-6C45B10FD6CD}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Entith.AspNet.DependencyInjection.Autofac4", "src\Entith.AspNet.DependencyInjection.Autofac4\Entith.AspNet.DependencyInjection.Autofac4.xproj", "{DE494689-1F85-419B-BE55-6C45B10FD6CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entith.AspNet.Domain", "src\Entith.AspNet.Domain\Entith.AspNet.Domain.csproj", "{4F204E89-1A9F-4905-8EF4-AD8BD96C5C93}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Entith.AspNet.Domain", "src\Entith.AspNet.Domain\Entith.AspNet.Domain.xproj", "{4F204E89-1A9F-4905-8EF4-AD8BD96C5C93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entith.AspNet.Domain.EntityFrameworkCore", "src\Entith.AspNet.Domain.EntityFrameworkCore\Entith.AspNet.Domain.EntityFrameworkCore.csproj", "{23271B42-283F-46CB-A857-EA3A7A4F4966}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Entith.AspNet.Domain.EntityFrameworkCore", "src\Entith.AspNet.Domain.EntityFrameworkCore\Entith.AspNet.Domain.EntityFrameworkCore.xproj", "{23271B42-283F-46CB-A857-EA3A7A4F4966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entith.AspNet.DependencyInjection.Autofac3", "src\Entith.AspNet.DependencyInjection.Autofac3\Entith.AspNet.DependencyInjection.Autofac3.csproj", "{3190EBB5-17AE-49FA-830E-112BFE8CE849}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Entith.AspNet.DependencyInjection.Autofac3", "src\Entith.AspNet.DependencyInjection.Autofac3\Entith.AspNet.DependencyInjection.Autofac3.xproj", "{3190EBB5-17AE-49FA-830E-112BFE8CE849}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Entith.AspNet.Domain.EntityFramework", "src\Entith.AspNet.Domain.EntityFramework\Entith.AspNet.Domain.EntityFramework.xproj", "{A7EC3819-3E69-4DED-A061-512723349BAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entith.AspNet.Domain.EntityFramework", "src\Entith.AspNet.Domain.EntityFramework\Entith.AspNet.Domain.EntityFramework.csproj", "{A7EC3819-3E69-4DED-A061-512723349BAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,5 +51,8 @@ Global
 		{23271B42-283F-46CB-A857-EA3A7A4F4966} = {AB94F2CB-817C-41F9-97F1-94D322D3FDB5}
 		{3190EBB5-17AE-49FA-830E-112BFE8CE849} = {AB94F2CB-817C-41F9-97F1-94D322D3FDB5}
 		{A7EC3819-3E69-4DED-A061-512723349BAF} = {AB94F2CB-817C-41F9-97F1-94D322D3FDB5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DE105BE1-9F40-4C96-BA09-4B93683DAA41}
 	EndGlobalSection
 EndGlobal

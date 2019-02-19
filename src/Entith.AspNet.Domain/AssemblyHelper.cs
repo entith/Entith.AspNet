@@ -13,9 +13,6 @@ namespace Entith.AspNet.Domain
         public static IEnumerable<Type> GetAssemblies()
         {
 
-#if NET451
-            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes());
-#else
             var assemblies = new List<Assembly>();
             var dependencies = DependencyContext.Default.RuntimeLibraries;
             foreach (var library in dependencies)
@@ -31,7 +28,6 @@ namespace Entith.AspNet.Domain
                 }
             }
             return assemblies.SelectMany(a => a.ExportedTypes);
-#endif
         }
     }
 }

@@ -1,3 +1,11 @@
+**DO NOT USE** - These libraries are bad and should not be used. I have learned much since I made them, and I have no intention of ever using them on a new project. My projects that do use these have resulted in "viscus" code that is not easy to change or add to, hard to follow or predict logic, and more worthless boilerplate code than I could ever have imagined. The only place where these libraries may have had a place is in the most basic of CRUD applications, but even then, you are better off just implementing your own repository class.
+
+Note to self: stop trying to make frameworks out of everything.
+
+Coming soon: CQRS + Event Sourcing framework
+
+----
+
 Service and repository libraries for ORM-agnostic data access and domain logic/business rules.
 
 # Overview
